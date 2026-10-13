@@ -133,6 +133,14 @@ wait_gone "workshop namespaces" workshop_namespaces
 # ---------------------------------------------------------------------------------------------
 # 2. What Argo CD cannot prune: operators installed through OLM
 # ---------------------------------------------------------------------------------------------
+# ACME: Builds for Red Hat OpenShift runs its builds on OpenShift Pipelines, so it goes first.
+# Deleting OpenShiftBuild removes Shipwright, its build strategies and its webhook.
+log "Removing OpenShiftBuild (Builds for Red Hat OpenShift)"
+oc delete openshiftbuilds.operator.openshift.io cluster --ignore-not-found --wait=true --timeout=300s 2>/dev/null
+# ACME: Builds for Red Hat OpenShift runs its builds on OpenShift Pipelines, so it goes first.
+# Deleting OpenShiftBuild removes Shipwright, its build strategies and its webhook.
+log "Removing OpenShiftBuild (Builds for Red Hat OpenShift)"
+oc delete openshiftbuilds.operator.openshift.io cluster --ignore-not-found --wait=true --timeout=300s 2>/dev/null
 log "Removing TektonConfig (lets the Pipelines operator clean up openshift-pipelines)"
 oc delete tektonconfig config --ignore-not-found --wait=true --timeout=300s
 # The operator removes its TektonInstallerSets asynchronously; its CSV must stay until they are gone.
@@ -163,10 +171,12 @@ delete_operator openshift-operators openshift-pipelines-operator-rh openshift-pi
 delete_operator openshift-operators servicemeshoperator3 servicemeshoperator3
 delete_operator kiali-operator kiali-ossm kiali-operator
 delete_operator gitea-operator gitea-operator gitea-operator
+delete_operator openshift-builds openshift-builds-operator openshift-builds-operator
+delete_operator openshift-builds openshift-builds-operator openshift-builds-operator
 drain "Pipelines operator installer sets" tektoninstallersets.operator.tekton.dev openshift-pipelines-operator-rh
 
 log "Removing operator namespaces kept during the Argo CD cleanup"
-oc delete namespace kiali-operator gitea-operator --ignore-not-found --wait=false
+oc delete namespace kiali-operator gitea-operator openshift-builds --ignore-not-found --wait=false
 
 log "Removing objects the operators created themselves"
 oc delete namespace openshift-pipelines --ignore-not-found --wait=false
@@ -203,7 +213,7 @@ oc delete validatingwebhookconfiguration config.webhook.operator.tekton.dev vali
   namespace.operator.tekton.dev --ignore-not-found
 for kind in clusterrole clusterrolebinding; do
   oc get "$kind" --no-headers -o custom-columns=NAME:.metadata.name \
-    | grep -E '^(devworkspace-controller-|devspaces-(edit|view)$|gitea-operator-|openshift-pipelines-|pipelines-scc-|tekton-|servicemesh-|sail-|kiali-)' \
+    | grep -E '^(devworkspace-controller-|devspaces-(edit|view)$|gitea-operator-|openshift-pipelines-|pipelines-scc-|tekton-|servicemesh-|sail-|kiali-|openshift-builds-)' \
     | xargs -r oc delete "$kind" --ignore-not-found >/dev/null
 done
 # Java 21 builder tag added by the platform chart's cluster-integration Job.
@@ -212,7 +222,7 @@ oc tag -d openshift/java:openjdk-21-ubi9 >/dev/null 2>&1 && log "Removed openshi
 if [[ "$KEEP_CRDS" != "true" ]]; then
   log "Removing the operators' CRDs"
   oc get crd --no-headers -o custom-columns=NAME:.metadata.name \
-    | grep -E '\.(devfile\.io|eclipse\.che|tekton\.dev|pipelinesascode\.tekton\.dev|istio\.io|sailoperator\.io|kiali\.io|pfe\.rhpds\.com)$' \
+    | grep -E '\.(devfile\.io|eclipse\.che|tekton\.dev|pipelinesascode\.tekton\.dev|istio\.io|sailoperator\.io|kiali\.io|pfe\.rhpds\.com|shipwright\.io|sharedresource\.openshift\.io)$|^openshiftbuilds\.operator\.openshift\.io$' \
     | xargs -r oc delete crd --ignore-not-found --wait=false
 fi
 
@@ -245,7 +255,7 @@ else
 fi
 
 namespaces_left() {
-  for ns in kiali-operator gitea-operator openshift-pipelines $([[ "$KEEP_GITOPS" == "true" ]] || echo "$GITOPS_NAMESPACE openshift-gitops-operator"); do
+  for ns in kiali-operator gitea-operator openshift-builds openshift-pipelines $([[ "$KEEP_GITOPS" == "true" ]] || echo "$GITOPS_NAMESPACE openshift-gitops-operator"); do
     oc get namespace "$ns" --no-headers -o custom-columns=NAME:.metadata.name 2>/dev/null
   done
 }
@@ -256,14 +266,14 @@ wait_gone "operator namespaces" namespaces_left
 # ---------------------------------------------------------------------------------------------
 leftovers() {
   oc get namespaces --no-headers -o custom-columns=NAME:.metadata.name \
-    | grep -E '^(my-project-|cn-project-|devspaces-|lab-guide$|workshop-setup$|openshift-devspaces$|istio-system$|istio-cni$|argocd$|gitea$|nexus$|kiali-operator$|gitea-operator$|openshift-pipelines$)' \
+    | grep -E '^(my-project-|cn-project-|devspaces-|lab-guide$|workshop-setup$|openshift-devspaces$|istio-system$|istio-cni$|argocd$|gitea$|nexus$|kiali-operator$|gitea-operator$|openshift-pipelines$|openshift-builds$|acme-)' \
     | sed 's/^/namespace /'
   oc get csv -A --no-headers -o custom-columns=NAME:.metadata.name 2>/dev/null | sort -u \
-    | grep -E '^(devspacesoperator|devworkspace-operator|openshift-pipelines-operator-rh|servicemeshoperator3|kiali-operator|gitea-operator)' \
+    | grep -E '^(devspacesoperator|devworkspace-operator|openshift-pipelines-operator-rh|servicemeshoperator3|kiali-operator|gitea-operator|openshift-builds-operator)' \
     | sed 's/^/csv /'
   if [[ "$KEEP_CRDS" != "true" ]]; then
     oc get crd --no-headers -o custom-columns=NAME:.metadata.name \
-      | grep -E '\.(devfile\.io|eclipse\.che|tekton\.dev|istio\.io|sailoperator\.io|kiali\.io|pfe\.rhpds\.com)$' | sed 's/^/crd /'
+      | grep -E '\.(devfile\.io|eclipse\.che|tekton\.dev|istio\.io|sailoperator\.io|kiali\.io|pfe\.rhpds\.com|shipwright\.io|sharedresource\.openshift\.io)$|^openshiftbuilds\.operator\.openshift\.io$' | sed 's/^/crd /'
   fi
   oc get mutatingwebhookconfigurations,validatingwebhookconfigurations --no-headers -o custom-columns=NAME:.metadata.name \
     | grep -E 'tekton|devfile|istio|checluster' | sed 's/^/webhook /'

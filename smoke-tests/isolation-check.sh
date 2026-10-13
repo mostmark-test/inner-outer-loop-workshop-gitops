@@ -54,9 +54,9 @@ check "Log in as $B" login "$B"
 
 section "OpenShift: $A vs namespaces of $B"
 check "$A sees only their own projects" bash -c \
-  "[ -z \"\$(KUBECONFIG=${WORK}/$A oc get projects -o name | grep -v -E 'project.openshift.io/(my-project|cn-project|devspaces)-$A\$')\" ]"
+  "[ -z \"\$(KUBECONFIG=${WORK}/$A oc get projects -o name | grep -v -E 'project.openshift.io/(my-project|cn-project|devspaces|acme)-$A\$')\" ]"
 check "$A cannot list namespaces cluster-wide" denied as "$A" get namespaces
-for ns in "my-project-$B" "cn-project-$B" "devspaces-$B"; do
+for ns in "my-project-$B" "cn-project-$B" "devspaces-$B" "acme-$B"; do
   check "$A cannot list pods in $ns" denied as "$A" get pods -n "$ns"
   check "$A cannot read secrets in $ns" denied as "$A" get secrets -n "$ns"
   check "$A cannot create a ConfigMap in $ns" denied as "$A" create configmap isolation-probe -n "$ns" --from-literal=a=b

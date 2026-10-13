@@ -47,6 +47,11 @@ serviceMesh:
   consolePlugin:
     enabled: true
 
+# ACME: Builds for Red Hat OpenShift (operator installed by the operators chart).
+builds:
+  enabled: true
+  sharedResource: Disabled
+
 monitoring:
   # Kiali reads Istio metrics from the Thanos querier, which needs user workload monitoring.
   enableUserWorkload: true

@@ -29,6 +29,9 @@ rules:
   - apiGroups: ["apps"]
     resources: ["deployments", "statefulsets"]
     verbs: ["get", "list"]
+  - apiGroups: ["shipwright.io"]
+    resources: ["clusterbuildstrategies"]
+    verbs: ["get", "list"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -102,6 +105,9 @@ spec:
               {{- if .Values.gitea.enabled }}
               check "Gitea admin set up" bash -c "oc get gitea {{ .Values.gitea.name }} -n {{ .Values.gitea.namespace }} -o jsonpath='{.status.adminSetupComplete}' | grep -x true"
               check "Gitea" deploy_ready {{ .Values.gitea.namespace }} {{ .Values.gitea.name }}
+              {{- end }}
+              {{- if .Values.builds.enabled }}
+              check "Builds for Red Hat OpenShift (build strategy buildah)" bash -c "oc get clusterbuildstrategies.shipwright.io buildah -o name"
               {{- end }}
               {{- if .Values.nexus.enabled }}
               check "Nexus" deploy_ready {{ .Values.nexus.namespace }} {{ .Values.nexus.name }}

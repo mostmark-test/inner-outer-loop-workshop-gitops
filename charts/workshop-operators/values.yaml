@@ -68,6 +68,20 @@ subscriptions:
     sourceNamespace: gitea-operator
     installPlanApproval: Automatic
 
+  # ACME: Builds for Red Hat OpenShift (Shipwright), for the chapter "Build a Container Image
+  # with Shipwright". Supports only "all namespaces", so it gets its own namespace with a
+  # cluster-wide OperatorGroup. Needs OpenShift Pipelines.
+  builds:
+    enabled: true
+    name: openshift-builds-operator
+    package: openshift-builds-operator
+    channel: builds-1.9
+    namespace: openshift-builds
+    ownNamespace: true
+    source: redhat-operators
+    sourceNamespace: openshift-marketplace
+    installPlanApproval: Automatic
+
 catalogSources:
   gitea:
     enabled: true

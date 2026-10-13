@@ -33,7 +33,7 @@ done
 section "Operators"
 for entry in openshift-gitops-operator/openshift-gitops-operator openshift-operators/devspaces \
              openshift-operators/openshift-pipelines-operator-rh openshift-operators/servicemeshoperator3 \
-             kiali-operator/kiali-ossm gitea-operator/gitea-operator; do
+             kiali-operator/kiali-ossm gitea-operator/gitea-operator openshift-builds/openshift-builds-operator; do
   ns=${entry%%/*}; sub=${entry#*/}
   csv=$(oc get subscriptions.operators.coreos.com "$sub" -n "$ns" -o jsonpath='{.status.installedCSV}' 2>/dev/null)
   check "CSV of $sub ($csv) Succeeded" test "$(oc get csv "$csv" -n "$ns" -o jsonpath='{.status.phase}' 2>/dev/null)" = "Succeeded"
@@ -108,6 +108,7 @@ for user in $USERS; do
   done
   check "$user: admin in my-project-$user" can_i_as "$user" create deployments "my-project-$user"
   check "$user: edit in cn-project-$user" can_i_as "$user" create deployments "cn-project-$user"
+  check "$user: admin in acme-$user, can create Shipwright builds" can_i_as "$user" create builds.shipwright.io "acme-$user"
   check "$user: cn-project in the mesh" test \
     "$(oc get namespace "cn-project-$user" -o jsonpath='{.metadata.labels.istio-discovery}')" = "enabled"
   check "$user: cn-project managed by participant Argo CD" test \

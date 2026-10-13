@@ -50,3 +50,7 @@ devspaces:
 # despite a permission-check bug in Kiali 2.27 (docs/known-issues.md K19). Set to false once the installed
 # Kiali is 2.28 or later.
 kialiEditWorkaround: true
+# ACME: one project acme-<user> per participant, where the participant is admin
+# (templates/acme-projects.yaml).
+acmeProjects:
+  enabled: true

@@ -100,7 +100,7 @@ nexus:
   warmup:
     enabled: true
     image: quay.io/mostmark/workshop-tools:latest
-    repositoryURL: https://github.com/mostmark/inner-outer-loop-workshop-code.git
+    repositoryURL: https://github.com/mostmark-test/inner-outer-loop-workshop-code.git
     repositoryRevision: main
     timeoutSeconds: 1800
 

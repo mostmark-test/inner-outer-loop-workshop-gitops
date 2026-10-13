@@ -7,9 +7,9 @@ the origin of the content.
 
 Related repositories (all use only the `main` branch):
 
-- `github.com/mostmark/inner-outer-loop-workshop`: the lab guide (image
-  `quay.io/mostmark/inner-outer-loop-lab:latest`).
-- `github.com/mostmark/inner-outer-loop-workshop-code`: what participants get in their workspace
+- `github.com/mostmark-test/inner-outer-loop-workshop`: the lab guide (image
+  `quay.io/mostmark_test/inner-outer-loop-lab:latest`).
+- `github.com/mostmark-test/inner-outer-loop-workshop-code`: what participants get in their workspace
   (code, devfile, task scripts, pipelines). It has no `CLAUDE.md` of its own; its rules are in
   "Working on the code repository" below.
 
@@ -140,7 +140,7 @@ list in the lab guide repository's `CLAUDE.md` and the code repository's list be
 
 ## Working on the code repository
 
-`github.com/mostmark/inner-outer-loop-workshop-code` is cloned into every participant's workspace
+`github.com/mostmark-test/inner-outer-loop-workshop-code` is cloned into every participant's workspace
 (`/projects/workshop`), so **everything in it is visible to participants**. Keep it to what they
 need, like the original workshop: `labs/`, `.tasks/`, `devfile.yaml`, `.gitignore` and a short
 participant `README.md` (overview only, no installation or maintainer details). Maintainer material

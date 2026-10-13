@@ -1,7 +1,7 @@
 # Workshop tools image for the Inner & Outer Loop workshop (Dev Spaces tooling container).
 #
 # Image: quay.io/mostmark/workshop-tools:latest (x86_64 only; build with ./build-push.sh)
-# Used by: devfile.yaml (component workshop-tools) of github.com/mostmark/inner-outer-loop-workshop-code.
+# Used by: devfile.yaml (component workshop-tools) of github.com/mostmark-test/inner-outer-loop-workshop-code.
 
 FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
 
@@ -16,7 +16,7 @@ LABEL name="workshop-tools" \
       description="Java 21, Maven 3.9, oc/kubectl, tkn, argocd, yq, git and jq for OpenShift Dev Spaces" \
       io.k8s.display-name="Workshop tools" \
       io.openshift.tags="workshop,devspaces,java,maven,oc,tkn,argocd" \
-      org.opencontainers.image.source="https://github.com/mostmark/inner-outer-loop-workshop-gitops"
+      org.opencontainers.image.source="https://github.com/mostmark-test/inner-outer-loop-workshop-gitops"
 
 ENV HOME=/home/developer \
     JAVA_HOME=/usr/lib/jvm/java-21-openjdk \

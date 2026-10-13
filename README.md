@@ -11,8 +11,8 @@ Part 2 Outer Loop) with OpenShift GitOps. They manage:
   credentials
 - the lab guide: namespace, deployment, service, route and the URL template ConfigMap
 
-The lab guide lives in [inner-outer-loop-workshop](https://github.com/mostmark/inner-outer-loop-workshop)
-and the example code in [inner-outer-loop-workshop-code](https://github.com/mostmark/inner-outer-loop-workshop-code).
+The lab guide lives in [inner-outer-loop-workshop](https://github.com/mostmark-test/inner-outer-loop-workshop)
+and the example code in [inner-outer-loop-workshop-code](https://github.com/mostmark-test/inner-outer-loop-workshop-code).
 
 To run the workshop in your own organisation with your own branding, chapters, code or operators,
 follow the hands-on tutorials
@@ -29,7 +29,7 @@ and the internal image registry, and the participant users already in its identi
 (see [Prerequisites](#prerequisites) and [Sizing](#sizing)).
 
 ```bash
-git clone https://github.com/mostmark/inner-outer-loop-workshop-gitops.git
+git clone https://github.com/mostmark-test/inner-outer-loop-workshop-gitops.git
 cd inner-outer-loop-workshop-gitops
 oc login <api-url>                                        # as cluster-admin
 
@@ -333,7 +333,7 @@ to `false` in `charts/workshop/values.yaml`.
 ## Participant Workspace and Tooling Image
 
 Each participant works in a pre-created DevWorkspace `wksp-end-to-end-dev` in `devspaces-<user>`.
-It uses the devfile of [inner-outer-loop-workshop-code](https://github.com/mostmark/inner-outer-loop-workshop-code)
+It uses the devfile of [inner-outer-loop-workshop-code](https://github.com/mostmark-test/inner-outer-loop-workshop-code)
 as its parent, clones that repository (branch `main`) to `/projects/workshop`, and runs the tooling
 container `quay.io/mostmark/workshop-tools:latest` (source in [`tools/`](tools)) with the VS Code
 editor merged into it. The devfile commands (Terminal > Run Task... > devfile) are the scripts in

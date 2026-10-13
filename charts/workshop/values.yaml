@@ -12,7 +12,7 @@ guidePart: all
 
 # Git source of the component charts. bootstrap.sh overrides repoURL/targetRevision when needed.
 source:
-  repoURL: https://github.com/mostmark/inner-outer-loop-workshop-gitops.git
+  repoURL: https://github.com/mostmark-test/inner-outer-loop-workshop-gitops.git
   targetRevision: main
 
 # The provisioning Argo CD instance (admin only).

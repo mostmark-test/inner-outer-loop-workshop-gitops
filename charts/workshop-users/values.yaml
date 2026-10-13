@@ -35,8 +35,8 @@ devspaces:
   # 0.25 vCPU / 1.3 GiB requested and up to 2.5 vCPU / 5 GiB per participant, see README).
   prestartWorkspaces: true
   workspaceName: wksp-end-to-end-dev
-  devfileURL: https://raw.githubusercontent.com/mostmark/inner-outer-loop-workshop-code/main/devfile.yaml
-  repositoryURL: https://github.com/mostmark/inner-outer-loop-workshop-code.git
+  devfileURL: https://raw.githubusercontent.com/mostmark-test/inner-outer-loop-workshop-code/main/devfile.yaml
+  repositoryURL: https://github.com/mostmark-test/inner-outer-loop-workshop-code.git
   repositoryRevision: main
   # VS Code editor of Dev Spaces 3.30, copied from the `che-code.yaml` entry of the
   # editors-definitions ConfigMap in openshift-devspaces. Update the digests when Dev Spaces is

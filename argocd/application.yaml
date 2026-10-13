@@ -8,7 +8,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/mostmark/inner-outer-loop-workshop-gitops.git
+    repoURL: https://github.com/mostmark-test/inner-outer-loop-workshop-gitops.git
     targetRevision: main
     path: charts/workshop
     helm:
@@ -28,7 +28,7 @@ spec:
         - name: workshopUsers.credentialsChecksum
           value: ""
         - name: source.repoURL
-          value: https://github.com/mostmark/inner-outer-loop-workshop-gitops.git
+          value: https://github.com/mostmark-test/inner-outer-loop-workshop-gitops.git
         - name: source.targetRevision
           value: main
   destination:
